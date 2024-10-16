@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang=\en\<head>
+<meta charset=\UTF-8\ <meta name=\viewport\ content=\width=device-width, initial-scale=1.0\ <title>Catch the Falling Star</title>
+<style>
+body {
+margin: 0;
+overflow: hidden;
+display: flex;
+justify-content: center;
+align-items: center;
+height: 100vh;
+background-color: #282c34;
+color: white;
+font-family: 'Arial', sans-serif;
+}
+
+.star {
+position: absolute;
+width: 30px;
+height: 30px;
+background-image: url('https://img.icons8.com/emoji/48/000000/glowing-star.png');
+background-size: cover;
+pointer-events: auto;
+}
+
+.score {
+position: absolute;
+top: 20px;
+left: 20px;
+font-size: 24px;
+}
+
+button {
+margin-top: 20px;
+padding: 10px 20px;
+font-size: 16px;
+cursor: pointer;
+}
+
+#restart {
+display: none;
+}
+</style>
+</head>
+<body>
+<div class=\score\Score: <span id=\score\0</span></div>
+<button id=\start\Start Game</button>
+<button id=\restart\Restart Game</button>
+
+<script>
+let score = 0;
+let gameInterval;
+
+function spawnStar() {
+const star = document.createElement('div');
+star.classList.add('star');
+star.style.left = Math.random() * window.innerWidth + 'px';
+document.body.appendChild(star);
+
+star.addEventListener('click', () => {
+score += 1;
+document.getElementById('score').textContent = score;
+star.remove();
+});
+
+// Move the star down
+let fallInterval = setInterval(() => {
+star.style.top = (parseInt(star.style.top || '0') + 5) + 'px';
+
+if (parseInt(star.style.top) > window.innerHeight) {
+star.remove();
+clearInterval(fallInterval);
+}
+}, 100);
+
+// Remove star after a duration
+setTimeout(() => {
+if (star.parentNode) {
+star.remove();
+}
+}, 5000);
+}
+
+function startGame() {
+score = 0;
+document.getElementById('score').textContent = score;
+gameInterval = setInterval(spawnStar, 1000);
+document.getElementById('start').style.display = 'none';
+document.getElementById('restart').style.display = 'none';
+}
+
+function restartGame() {
+clearInterval(gameInterval);
+startGame();
+}
+
+document.getElementById('start').addEventListener('click', startGame);
+document.getElementById('restart').addEventListener('click', restartGame);
+</script>
+</body>
+</html>
