@@ -1,0 +1,74 @@
+```html
+<!DOCTYPE html>
+<html lang=\en\<head>
+<meta charset=\UTF-8\ <meta name=\viewport\ content=\width=device-width, initial-scale=1.0\ <title>Tally Tracker</title>
+<style>
+body {
+font-family: Arial, sans-serif;
+text-align: center;
+margin: 50px;
+}
+#leaderboard {
+margin-top: 20px;
+}
+</style>
+</head>
+<body>
+
+<h1>Tally Tracker</h1>
+<div id=\tallyCount\Your Tally: 0</div>
+<button id=\resetButton\Reset Tally</button>
+
+<div id=\leaderboard\ <h2>Leaderboard</h2>
+<ul id=\leaderList\ul>
+</div>
+
+<script>
+let tally = 0;
+const userName = prompt(\Enter your username:\
+// Retrieve existing data from localStorage
+let userData = JSON.parse(localStorage.getItem('userData')) || {};
+
+// Check if the user already exists
+if (!userData[userName]) {
+userData[userName] = 0;
+}
+
+function updateTally() {
+tally++;
+userData[userName] = tally;
+localStorage.setItem('userData', JSON.stringify(userData));
+document.getElementById('tallyCount').innerText = `Your Tally: ${tally}`;
+updateLeaderboard();
+}
+
+function updateLeaderboard() {
+const leaderList = document.getElementById('leaderList');
+leaderList.innerHTML = ''; // Clear the current leaderboard
+Object.keys(userData).sort((a, b) => userData[b] - userData[a]).forEach(user => {
+const li = document.createElement('li');
+li.textContent = `${user}: ${userData[user]} tally(ies)`;
+leaderList.appendChild(li);
+});
+}
+
+setInterval(updateTally, 60000); // Increment tally every 60 seconds
+
+document.getElementById('resetButton').onclick = function() {
+tally = 0;
+userData[userName] = tally;
+localStorage.setItem('userData', JSON.stringify(userData));
+document.getElementById('tallyCount').innerText = `Your Tally: ${tally}`;
+updateLeaderboard();
+};
+
+// On load, set tally from localStorage if available
+tally = userData[userName];
+document.getElementById('tallyCount').innerText = `Your Tally: ${tally}`;
+updateLeaderboard();
+
+</script>
+
+</body>
+</html>
+```
